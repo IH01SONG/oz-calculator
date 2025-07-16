@@ -15,6 +15,8 @@ const appendNumber = (number) => {
     if (isResultDisplayed) {
       // 결과가 표시된 후 새로운 숫자 입력 시 초기화
       currentInput = "";
+      firstNumber = null; // 결과 표시 후 숫자 입력 시 firstNumber도 초기화
+      operator = null; // 결과 표시 후 숫자 입력 시 operator도 초기화
       isResultDisplayed = false;
     }
 
@@ -24,10 +26,14 @@ const appendNumber = (number) => {
     // 디스플레이 업데이트
     const display = document.getElementById("display");
     if (!display) throw new Error("디스플레이 요소를 찾을 수 없습니다.");
-    display.textContent =
-      firstNumber !== null && operator !== null
-        ? `${firstNumber} ${operator} ${currentInput}`
-        : currentInput;
+
+    // 연산자가 선택된 상태라면 'firstNumber operator currentInput' 형식으로 표시
+    // 그렇지 않다면 currentInput만 표시
+    if (firstNumber !== null && operator !== null) {
+      display.textContent = `${firstNumber} ${operator} ${currentInput}`;
+    } else {
+      display.textContent = currentInput;
+    }
   } catch (error) {
     showError(error.message);
   }
@@ -49,9 +55,8 @@ const setOperator = (op) => {
     } else if (currentInput && firstNumber !== null && operator !== null) {
       // 연속적인 연산자 입력 시 이전 계산 수행
       calculate();
-      firstNumber = Number(
-        document.getElementById("display").textContent.split(" ")[0]
-      ); // 계산된 결과를 firstNumber로 설정
+      // calculate() 호출 후 firstNumber가 업데이트되므로, 그 값을 사용
+      firstNumber = Number(document.getElementById("display").textContent); // 계산된 결과를 firstNumber로 설정
     }
 
     // TODO: 학생들이 작성해야 할 로직
@@ -69,7 +74,7 @@ const setOperator = (op) => {
   }
 };
 
-// 초기화 버튼 클릭 시 모든 값 초기화
+// 초기화 버튼 클릭 시 모든 값 초기화 (AC)
 const clearDisplay = () => {
   currentInput = "";
   firstNumber = null;
@@ -80,6 +85,47 @@ const clearDisplay = () => {
   isResultDisplayed = false;
 };
 
+// 부호 변경 (+/-)
+const toggleSign = () => {
+  try {
+    if (isResultDisplayed) {
+      currentInput = (
+        parseFloat(document.getElementById("display").textContent) * -1
+      ).toString();
+      document.getElementById("display").textContent = currentInput;
+      firstNumber = parseFloat(currentInput);
+      isResultDisplayed = false;
+    } else if (currentInput !== "") {
+      currentInput = (parseFloat(currentInput) * -1).toString();
+      document.getElementById("display").textContent = currentInput;
+    } else if (firstNumber !== null) {
+      firstNumber = firstNumber * -1;
+      document.getElementById("display").textContent = `${firstNumber} ${
+        operator || ""
+      }`;
+    }
+  } catch (error) {
+    showError(error.message);
+  }
+};
+
+// 퍼센트 계산 (%)
+const calculatePercentage = () => {
+  try {
+    if (currentInput !== "") {
+      currentInput = (parseFloat(currentInput) / 100).toString();
+      document.getElementById("display").textContent = currentInput;
+    } else if (firstNumber !== null) {
+      firstNumber = firstNumber / 100;
+      document.getElementById("display").textContent = `${firstNumber} ${
+        operator || ""
+      }`;
+    }
+  } catch (error) {
+    showError(error.message);
+  }
+};
+
 // 계산 실행
 const calculate = () => {
   const resultElement = document.getElementById("result");
@@ -87,10 +133,20 @@ const calculate = () => {
   try {
     // TODO: 학생들이 작성해야 할 로직
     // 4. firstNumber, operator, currentInput(두 번째 숫자)이 모두 존재하는지 확인
-    if (firstNumber === null || operator === null || !currentInput)
+    if (firstNumber === null || operator === null) {
+      // 연산자 없이 =을 누른 경우 현재 입력값을 결과로 표시
+      if (currentInput !== "") {
+        result = parseFloat(currentInput);
+        document.getElementById("display").textContent = result;
+        isResultDisplayed = true;
+        return;
+      }
       throw new Error("계산에 필요한 값이 부족합니다.");
+    }
 
-    const secondNumber = Number(currentInput);
+    // currentInput이 비어있으면 firstNumber를 두 번째 숫자로 사용 (예: 5 + = )
+    const secondNumber =
+      currentInput === "" ? firstNumber : Number(currentInput);
 
     // TODO: 학생들이 작성해야 할 로직
     // 5. secondNumber가 유효한 숫자인지 확인
@@ -171,6 +227,8 @@ const appendDecimal = () => {
     if (isResultDisplayed) {
       // 결과가 표시된 후 소수점 입력 시 초기화
       currentInput = "";
+      firstNumber = null;
+      operator = null;
       isResultDisplayed = false;
     }
 
@@ -187,6 +245,9 @@ const appendDecimal = () => {
 };
 
 // 추가 기능: 백스페이스 (마지막 문자 삭제)
+// 이 기능은 이미지에 없으므로, 필요하다면 다시 추가할 수 있습니다.
+// 현재는 AC, +/-, % 버튼으로 대체됩니다.
+
 const backspace = () => {
   try {
     if (isResultDisplayed) {
@@ -219,8 +280,14 @@ document.addEventListener("keydown", (event) => {
   const key = event.key;
   if (/[0-9]/.test(key)) {
     appendNumber(key);
-  } else if (operators.includes(key)) {
-    setOperator(key);
+  } else if (key === "+") {
+    setOperator("+");
+  } else if (key === "-") {
+    setOperator("-");
+  } else if (key === "*") {
+    setOperator("*");
+  } else if (key === "/") {
+    setOperator("/");
   } else if (key === "Enter") {
     calculate();
   } else if (key === "Escape") {
@@ -228,6 +295,6 @@ document.addEventListener("keydown", (event) => {
   } else if (key === ".") {
     appendDecimal();
   } else if (key === "Backspace") {
-    backspace();
+    // backspace(); // 현재는 이 기능이 UI에 없으므로 주석 처리
   }
 });

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>유용한 계산기 서비스</title>
+    <!-- Bootstrap 5 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container calculator-container">
+      <h1 class="text-center mb-4">유용한 계산기 서비스</h1>
+
+      <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="basic-calc-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#basic-calc"
+            type="button"
+            role="tab"
+            aria-controls="basic-calc"
+            aria-selected="true"
+          >
+            기본 계산기
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="exchange-rate-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#exchange-rate"
+            type="button"
+            role="tab"
+            aria-controls="exchange-rate"
+            aria-selected="false"
+          >
+            환율/시간
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="salary-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#salary"
+            type="button"
+            role="tab"
+            aria-controls="salary"
+            aria-selected="false"
+          >
+            연봉 계산
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="loan-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#loan"
+            type="button"
+            role="tab"
+            aria-controls="loan"
+            aria-selected="false"
+          >
+            대출 이자
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="bmi-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#bmi"
+            type="button"
+            role="tab"
+            aria-controls="bmi"
+            aria-selected="false"
+          >
+            BMI 계산
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="apt-mng-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#apt-mng"
+            type="button"
+            role="tab"
+            aria-controls="apt-mng"
+            aria-selected="false"
+          >
+            아파트 관리비
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="feedback-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#feedback"
+            type="button"
+            role="tab"
+            aria-controls="feedback"
+            aria-selected="false"
+          >
+            의견 보내기
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <!-- 기본 계산기 탭 -->
+        <div
+          class="tab-pane fade show active"
+          id="basic-calc"
+          role="tabpanel"
+          aria-labelledby="basic-calc-tab"
+        >
+          <div id="display" class="form-control">0</div>
+          <div class="row g-2">
+            <!-- AC, +/-, % -->
+            <div class="col-3">
+              <button
+                class="btn btn-dark-grey calc-btn w-100"
+                onclick="clearDisplay()"
+              >
+                AC
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-dark-grey calc-btn w-100"
+                onclick="toggleSign()"
+              >
+                +/-
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-dark-grey calc-btn w-100"
+                onclick="calculatePercentage()"
+              >
+                %
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-blue-op calc-btn w-100"
+                onclick="setOperator('/')"
+              >
+                ÷
+              </button>
+            </div>
+
+            <!-- 숫자 7, 8, 9, X -->
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('7')"
+              >
+                7
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('8')"
+              >
+                8
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('9')"
+              >
+                9
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-blue-op calc-btn w-100"
+                onclick="setOperator('*')"
+              >
+                ×
+              </button>
+            </div>
+
+            <!-- 숫자 4, 5, 6, - -->
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('4')"
+              >
+                4
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('5')"
+              >
+                5
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('6')"
+              >
+                6
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-blue-op calc-btn w-100"
+                onclick="setOperator('-')"
+              >
+                -
+              </button>
+            </div>
+
+            <!-- 숫자 1, 2, 3, + -->
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('1')"
+              >
+                1
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('2')"
+              >
+                2
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('3')"
+              >
+                3
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-blue-op calc-btn w-100"
+                onclick="setOperator('+')"
+              >
+                +
+              </button>
+            </div>
+
+            <!-- 숫자 0, ., DEL, = -->
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendNumber('0')"
+              >
+                0
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-light-grey calc-btn w-100"
+                onclick="appendDecimal()"
+              >
+                .
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-dark-grey calc-btn w-100"
+                onclick="backspace()"
+              >
+                DEL
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-orange-eq calc-btn w-100"
+                onclick="calculate()"
+              >
+                =
+              </button>
+            </div>
+          </div>
+          <div id="result" class="alert alert-info result-alert d-none"></div>
+          <div id="history" class="mt-3">
+            <h5>계산 기록:</h5>
+            <!-- 계산 기록이 여기에 표시됩니다. -->
+          </div>
+        </div>
+
+        <!-- 1. 환율 계산기 및 세계 시간 변환기 -->
+        <div
+          class="tab-pane fade"
+          id="exchange-rate"
+          role="tabpanel"
+          aria-labelledby="exchange-rate-tab"
+        >
+          <h4>환율 계산기</h4>
+          <div class="mb-3">
+            <label for="amount" class="form-label">금액 (원)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="amount"
+              value="10000"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="currency" class="form-label">환전 통화</label>
+            <select class="form-select" id="currency">
+              <option value="USD">미국 달러 (USD)</option>
+              <option value="EUR">유로 (EUR)</option>
+              <option value="JPY">일본 엔 (JPY)</option>
+              <!-- 더 많은 통화 추가 가능 -->
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="convertCurrency()">
+            환율 계산
+          </button>
+          <div id="exchangeResult" class="alert alert-info mt-3 d-none"></div>
+
+          <h4 class="mt-4">세계 시간 변환기</h4>
+          <div class="mb-3">
+            <label for="koreaTime" class="form-label">현재 한국 시간</label>
+            <input type="datetime-local" class="form-control" id="koreaTime" />
+          </div>
+          <div class="mb-3">
+            <label for="targetTimeZone" class="form-label">변환할 시간대</label>
+            <select class="form-select" id="targetTimeZone">
+              <option value="America/New_York">뉴욕 (EST)</option>
+              <option value="Europe/London">런던 (GMT)</option>
+              <option value="Asia/Tokyo">도쿄 (JST)</option>
+              <!-- 더 많은 시간대 추가 가능 -->
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="convertTime()">
+            시간 변환
+          </button>
+          <div
+            id="timeConvertResult"
+            class="alert alert-info mt-3 d-none"
+          ></div>
+        </div>
+
+        <!-- 2. 연봉 실수령액 계산기 -->
+        <div
+          class="tab-pane fade"
+          id="salary"
+          role="tabpanel"
+          aria-labelledby="salary-tab"
+        >
+          <h4>연봉 실수령액 계산기</h4>
+          <div class="mb-3">
+            <label for="annualSalary" class="form-label">연봉 (세전, 원)</label>
+            <input type="number" class="form-control" id="annualSalary" />
+          </div>
+          <button class="btn btn-primary" onclick="calculateNetSalary()">
+            계산
+          </button>
+          <div id="netSalaryResult" class="alert alert-info mt-3 d-none"></div>
+        </div>
+
+        <!-- 3. 대출 이자 계산기 / 상환 계획 시뮬레이터 -->
+        <div
+          class="tab-pane fade"
+          id="loan"
+          role="tabpanel"
+          aria-labelledby="loan-tab"
+        >
+          <h4>대출 이자 계산기</h4>
+          <div class="mb-3">
+            <label for="loanAmount" class="form-label">대출 원금 (원)</label>
+            <input type="number" class="form-control" id="loanAmount" />
+          </div>
+          <div class="mb-3">
+            <label for="loanInterestRate" class="form-label"
+              >연 이자율 (%)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="loanInterestRate"
+              step="0.01"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="loanTerm" class="form-label">대출 기간 (개월)</label>
+            <input type="number" class="form-control" id="loanTerm" />
+          </div>
+          <button class="btn btn-primary" onclick="calculateLoanInterest()">
+            계산
+          </button>
+          <div id="loanResult" class="alert alert-info mt-3 d-none"></div>
+        </div>
+
+        <!-- 4. BMI (체질량 지수) 계산기 및 건강 목표 설정 도우미 -->
+        <div
+          class="tab-pane fade"
+          id="bmi"
+          role="tabpanel"
+          aria-labelledby="bmi-tab"
+        >
+          <h4>BMI 계산기</h4>
+          <div class="mb-3">
+            <label for="heightCm" class="form-label">키 (cm)</label>
+            <input type="number" class="form-control" id="heightCm" />
+          </div>
+          <div class="mb-3">
+            <label for="weightKg" class="form-label">몸무게 (kg)</label>
+            <input type="number" class="form-control" id="weightKg" />
+          </div>
+          <button class="btn btn-primary" onclick="calculateBMI()">계산</button>
+          <div id="bmiResult" class="alert alert-info mt-3 d-none"></div>
+        </div>
+
+        <!-- 5. 아파트 관리비 계산 및 비교 도구 -->
+        <div
+          class="tab-pane fade"
+          id="apt-mng"
+          role="tabpanel"
+          aria-labelledby="apt-mng-tab"
+        >
+          <h4>아파트 관리비 계산기</h4>
+          <div class="mb-3">
+            <label for="mngArea" class="form-label">면적 (평)</label>
+            <input type="number" class="form-control" id="mngArea" />
+          </div>
+          <div class="mb-3">
+            <label for="commonMngFee" class="form-label"
+              >일반 관리비 (원/평)</label
+            >
+            <input type="number" class="form-control" id="commonMngFee" />
+          </div>
+          <div class="mb-3">
+            <label for="repairFee" class="form-label"
+              >장기수선충당금 (원/평)</label
+            >
+            <input type="number" class="form-control" id="repairFee" />
+          </div>
+          <button class="btn btn-primary" onclick="calculateAptManagementFee()">
+            계산
+          </button>
+          <div id="aptMngResult" class="alert alert-info mt-3 d-none"></div>
+        </div>
+
+        <!-- 사용자 의견 보내기 탭 -->
+        <div
+          class="tab-pane fade"
+          id="feedback"
+          role="tabpanel"
+          aria-labelledby="feedback-tab"
+        >
+          <h4>의견 보내기</h4>
+          <form id="feedbackForm">
+            <div class="mb-3">
+              <label for="feedbackEmail" class="form-label">이메일 주소</label>
+              <input
+                type="email"
+                class="form-control"
+                id="feedbackEmail"
+                placeholder="your@example.com"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="feedbackSubject" class="form-label">제목</label>
+              <input
+                type="text"
+                class="form-control"
+                id="feedbackSubject"
+                placeholder="의견 또는 문의 사항"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="feedbackMessage" class="form-label">메시지</label>
+              <textarea
+                class="form-control"
+                id="feedbackMessage"
+                rows="5"
+                placeholder="자세한 내용을 입력해주세요."
+                required
+              ></textarea>
+            </div>
+            <button
+              type="button"
+              class="btn btn-success"
+              onclick="sendFeedback()"
+            >
+              의견 보내기
+            </button>
+            <div id="feedbackStatus" class="alert mt-3 d-none"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="calculator.js"></script>
+    <script src="additional_calculators.js"></script>
+  </body>
+</html>
