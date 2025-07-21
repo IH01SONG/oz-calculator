@@ -1,3 +1,15 @@
+// 숫자를 디스플레이에 맞게 포맷하는 헬퍼 함수 (calculator.js와 동일)
+const formatNumberForDisplay = (numString) => {
+  if (numString === "" || numString === "-") return numString;
+  if (numString === "0") return "0";
+
+  if (numString.includes(".")) {
+    const parts = numString.split(".");
+    return Number(parts[0]).toLocaleString("ko-KR") + "." + parts[1];
+  }
+  return Number(numString).toLocaleString("ko-KR");
+};
+
 // 1. 환율 계산기 및 세계 시간 변환기
 const convertCurrency = async () => {
   const amount = parseFloat(document.getElementById("amount").value);
@@ -30,8 +42,8 @@ const convertCurrency = async () => {
   if (exchangeRates[currency]) {
     exchangeResult.classList.remove("alert-danger");
     exchangeResult.classList.add("alert-info");
-    exchangeResult.textContent = `변환된 금액: ${convertedAmount.toFixed(
-      2
+    exchangeResult.textContent = `변환된 금액: ${formatNumberForDisplay(
+      convertedAmount.toFixed(2)
     )} ${currency}`;
   } else {
     exchangeResult.classList.remove("alert-info");
@@ -112,7 +124,7 @@ const calculateNetSalary = () => {
 
   const nationalPension = monthlySalary * nationalPensionRate;
   const healthInsurance = monthlySalary * healthInsuranceRate;
-  const longTermCare = healthInsurance * longTermCareRate;
+  const longTermCare = healthInsurance * longTermCareRate; // 건강보험료의 12.95%
   const employmentInsurance = monthlySalary * employmentInsuranceRate;
 
   // 소득세는 연봉 구간별로 다르지만, 여기서는 간단한 비율 적용
@@ -132,41 +144,29 @@ const calculateNetSalary = () => {
   netSalaryResult.classList.remove("alert-danger");
   netSalaryResult.classList.add("alert-info");
   netSalaryResult.innerHTML = `
-        <p>월 실수령액: ${netMonthlySalary.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
-        <p>연 실수령액: ${netAnnualSalary.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
+        <p>월 실수령액: ${formatNumberForDisplay(
+          netMonthlySalary.toFixed(0)
+        )}</p>
+        <p>연 실수령액: ${formatNumberForDisplay(
+          netAnnualSalary.toFixed(0)
+        )}</p>
         <hr>
         <p>공제 내역 (월 기준):</p>
         <ul>
-            <li>국민연금: ${nationalPension.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
-            <li>건강보험: ${healthInsurance.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
-            <li>장기요양보험: ${longTermCare.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
-            <li>고용보험: ${employmentInsurance.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
-            <li>소득세: ${incomeTax.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
-            <li>지방소득세: ${localTax.toLocaleString("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            })}</li>
+            <li>국민연금: ${formatNumberForDisplay(
+              nationalPension.toFixed(0)
+            )}</li>
+            <li>건강보험: ${formatNumberForDisplay(
+              healthInsurance.toFixed(0)
+            )}</li>
+            <li>장기요양보험: ${formatNumberForDisplay(
+              longTermCare.toFixed(0)
+            )}</li>
+            <li>고용보험: ${formatNumberForDisplay(
+              employmentInsurance.toFixed(0)
+            )}</li>
+            <li>소득세: ${formatNumberForDisplay(incomeTax.toFixed(0))}</li>
+            <li>지방소득세: ${formatNumberForDisplay(localTax.toFixed(0))}</li>
         </ul>
     `;
   netSalaryResult.classList.remove("d-none");
@@ -217,18 +217,13 @@ const calculateLoanInterest = () => {
   loanResult.classList.remove("alert-danger");
   loanResult.classList.add("alert-info");
   loanResult.innerHTML = `
-        <p>월 상환액 (원리금 균등): ${monthlyPayment.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
-        <p>총 이자액: ${totalInterest.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
-        <p>총 상환액: ${(loanAmount + totalInterest).toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
+        <p>월 상환액 (원리금 균등): ${formatNumberForDisplay(
+          monthlyPayment.toFixed(0)
+        )}</p>
+        <p>총 이자액: ${formatNumberForDisplay(totalInterest.toFixed(0))}</p>
+        <p>총 상환액: ${formatNumberForDisplay(
+          (loanAmount + totalInterest).toFixed(0)
+        )}</p>
     `;
   loanResult.classList.remove("d-none");
 };
@@ -304,18 +299,15 @@ const calculateAptManagementFee = () => {
   aptMngResult.classList.remove("alert-danger");
   aptMngResult.classList.add("alert-info");
   aptMngResult.innerHTML = `
-        <p>총 일반 관리비: ${totalCommonMngFee.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
-        <p>총 장기수선충당금: ${totalRepairFee.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
-        <p>총 예상 관리비: ${totalManagementFee.toLocaleString("ko-KR", {
-          style: "currency",
-          currency: "KRW",
-        })}</p>
+        <p>총 일반 관리비: ${formatNumberForDisplay(
+          totalCommonMngFee.toFixed(0)
+        )}</p>
+        <p>총 장기수선충당금: ${formatNumberForDisplay(
+          totalRepairFee.toFixed(0)
+        )}</p>
+        <p>총 예상 관리비: ${formatNumberForDisplay(
+          totalManagementFee.toFixed(0)
+        )}</p>
     `;
   aptMngResult.classList.remove("d-none");
 };
@@ -334,8 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// 사용자 의견 보내기 기능
-const sendFeedback = (recipientEmail) => {
+// 사용자 의견 보내기 기능 (실제 이메일 전송은 아님)
+const sendFeedback = () => {
+  // recipientEmail 인자 제거
   const email = document.getElementById("feedbackEmail").value;
   const subject = document.getElementById("feedbackSubject").value;
   const message = document.getElementById("feedbackMessage").value;
@@ -359,20 +352,18 @@ const sendFeedback = (recipientEmail) => {
     return;
   }
 
-  // mailto 링크 생성
-  const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(`보낸 사람: ${email}\n\n${message}`)}`;
-
-  // 새 창에서 mailto 링크 열기
-  window.open(mailtoLink, "_blank");
-
+  // 실제 이메일 전송 대신 성공 메시지 표시
   feedbackStatus.classList.remove("alert-danger");
   feedbackStatus.classList.add("alert-success");
   feedbackStatus.textContent =
-    "이메일 클라이언트가 열렸습니다. 내용을 확인하고 전송해주세요.";
+    "의견이 성공적으로 전송되었습니다! (실제 이메일은 전송되지 않습니다.)"; // 메시지 변경
   feedbackStatus.classList.remove("d-none");
 
-  // 폼 초기화 (선택 사항)
+  // 폼 초기화
   document.getElementById("feedbackForm").reset();
+
+  // 메시지 잠시 후 사라지게 하기
+  setTimeout(() => {
+    feedbackStatus.classList.add("d-none");
+  }, 5000); // 5초 후 사라짐
 };

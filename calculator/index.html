@@ -12,146 +12,107 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
+
+  <!-- 기존의 모든 onclick 속성 제거 -->
+
+  <!-- 버튼 식별을 위해 숫자 버튼에는 data-value, 
+  연산자 버튼에는 data-operator, 기능 버튼에는 id를 부여 -->
+
+  <!-- <script src="calculator.js">를 
+  <script type="module" src="js/main.js">로 변경 -->
+
   <body>
     <div class="container calculator-container">
       <h1 class="text-center mb-4">계산기 서비스</h1>
       <div id="display" class="form-control">0</div>
       <div class="row g-2">
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('7')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="7">
             7
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('8')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="8">
             8
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('9')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="9">
             9
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-warning calc-btn w-100"
-            onclick="setOperator('/')"
-          >
+          <button class="btn btn-warning calc-btn w-100" data-operator="/">
             ÷
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('4')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="4">
             4
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('5')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="5">
             5
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('6')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="6">
             6
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-warning calc-btn w-100"
-            onclick="setOperator('*')"
-          >
+          <button class="btn btn-warning calc-btn w-100" data-operator="*">
             ×
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('1')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="1">
             1
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('2')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="2">
             2
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('3')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="3">
             3
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-warning calc-btn w-100"
-            onclick="setOperator('-')"
-          >
+          <button class="btn btn-warning calc-btn w-100" data-operator="-">
             -
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="appendNumber('0')"
-          >
+          <button class="btn btn-secondary calc-btn w-100" data-value="0">
             0
           </button>
         </div>
         <div class="col-3">
-          <button class="btn btn-info calc-btn w-100" onclick="appendDecimal()">
+          <button class="btn btn-info calc-btn w-100" id="btn-decimal">
             .
           </button>
         </div>
         <div class="col-3">
-          <button class="btn btn-primary calc-btn w-100" onclick="calculate()">
+          <button class="btn btn-primary calc-btn w-100" id="btn-equals">
             =
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-warning calc-btn w-100"
-            onclick="setOperator('+')"
-          >
+          <button class="btn btn-warning calc-btn w-100" data-operator="+">
             +
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-danger calc-btn w-100"
-            onclick="clearDisplay()"
-          >
+          <button class="btn btn-danger calc-btn w-100" id="btn-clear">
             C
           </button>
         </div>
         <div class="col-3">
-          <button
-            class="btn btn-secondary calc-btn w-100"
-            onclick="backspace()"
-          >
+          <button class="btn btn-secondary calc-btn w-100" id="btn-backspace">
             DEL
           </button>
         </div>
@@ -159,6 +120,7 @@
       <div id="result" class="alert alert-info result-alert d-none"></div>
       <div id="history" class="mt-3">
         <h5>계산 기록:</h5>
+        <div id="history-list"></div>
       </div>
     </div>
     <script
@@ -166,6 +128,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script src="calculator.js"></script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>

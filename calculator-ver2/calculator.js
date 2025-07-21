@@ -5,6 +5,21 @@ let operator = null; // 선택된 연산자
 const operators = ["+", "-", "*", "/"]; // 유효한 연산자 정의
 let isResultDisplayed = false; // 결과가 화면에 표시 중인지 여부
 
+// 숫자를 디스플레이에 맞게 포맷하는 헬퍼 함수
+const formatNumberForDisplay = (numString) => {
+  if (numString === "" || numString === "-") return numString; // 빈 문자열이나 음수 부호만 있는 경우 그대로 반환
+  if (numString === "0") return "0"; // 0인 경우 그대로 반환
+
+  // 소수점이 포함된 경우 처리
+  if (numString.includes(".")) {
+    const parts = numString.split(".");
+    // 정수 부분만 toLocaleString을 적용하고 소수점 이하는 그대로 유지
+    return Number(parts[0]).toLocaleString("ko-KR") + "." + parts[1];
+  }
+  // 정수 부분만 toLocaleString 적용
+  return Number(numString).toLocaleString("ko-KR");
+};
+
 // 숫자 버튼 클릭 시 디스플레이에 숫자 추가
 const appendNumber = (number) => {
   try {
@@ -30,9 +45,11 @@ const appendNumber = (number) => {
     // 연산자가 선택된 상태라면 'firstNumber operator currentInput' 형식으로 표시
     // 그렇지 않다면 currentInput만 표시
     if (firstNumber !== null && operator !== null) {
-      display.textContent = `${firstNumber} ${operator} ${currentInput}`;
+      display.textContent = `${formatNumberForDisplay(
+        firstNumber.toString()
+      )} ${operator} ${formatNumberForDisplay(currentInput)}`;
     } else {
-      display.textContent = currentInput;
+      display.textContent = formatNumberForDisplay(currentInput);
     }
   } catch (error) {
     showError(error.message);
@@ -56,7 +73,9 @@ const setOperator = (op) => {
       // 연속적인 연산자 입력 시 이전 계산 수행
       calculate();
       // calculate() 호출 후 firstNumber가 업데이트되므로, 그 값을 사용
-      firstNumber = Number(document.getElementById("display").textContent); // 계산된 결과를 firstNumber로 설정
+      firstNumber = Number(
+        document.getElementById("display").textContent.replace(/,/g, "")
+      ); // 포맷된 문자열에서 콤마 제거 후 숫자로 변환
     }
 
     // TODO: 학생들이 작성해야 할 로직
@@ -65,9 +84,9 @@ const setOperator = (op) => {
 
     operator = op;
     currentInput = ""; // 입력값 초기화
-    document.getElementById(
-      "display"
-    ).textContent = `${firstNumber} ${operator}`;
+    document.getElementById("display").textContent = `${formatNumberForDisplay(
+      firstNumber.toString()
+    )} ${operator}`;
     isResultDisplayed = false;
   } catch (error) {
     showError(error.message);
@@ -90,17 +109,23 @@ const toggleSign = () => {
   try {
     if (isResultDisplayed) {
       currentInput = (
-        parseFloat(document.getElementById("display").textContent) * -1
+        parseFloat(
+          document.getElementById("display").textContent.replace(/,/g, "")
+        ) * -1
       ).toString();
-      document.getElementById("display").textContent = currentInput;
+      document.getElementById("display").textContent =
+        formatNumberForDisplay(currentInput);
       firstNumber = parseFloat(currentInput);
       isResultDisplayed = false;
     } else if (currentInput !== "") {
       currentInput = (parseFloat(currentInput) * -1).toString();
-      document.getElementById("display").textContent = currentInput;
+      document.getElementById("display").textContent =
+        formatNumberForDisplay(currentInput);
     } else if (firstNumber !== null) {
       firstNumber = firstNumber * -1;
-      document.getElementById("display").textContent = `${firstNumber} ${
+      document.getElementById(
+        "display"
+      ).textContent = `${formatNumberForDisplay(firstNumber.toString())} ${
         operator || ""
       }`;
     }
@@ -114,10 +139,13 @@ const calculatePercentage = () => {
   try {
     if (currentInput !== "") {
       currentInput = (parseFloat(currentInput) / 100).toString();
-      document.getElementById("display").textContent = currentInput;
+      document.getElementById("display").textContent =
+        formatNumberForDisplay(currentInput);
     } else if (firstNumber !== null) {
       firstNumber = firstNumber / 100;
-      document.getElementById("display").textContent = `${firstNumber} ${
+      document.getElementById(
+        "display"
+      ).textContent = `${formatNumberForDisplay(firstNumber.toString())} ${
         operator || ""
       }`;
     }
@@ -137,7 +165,9 @@ const calculate = () => {
       // 연산자 없이 =을 누른 경우 현재 입력값을 결과로 표시
       if (currentInput !== "") {
         result = parseFloat(currentInput);
-        document.getElementById("display").textContent = result;
+        document.getElementById("display").textContent = formatNumberForDisplay(
+          result.toString()
+        );
         isResultDisplayed = true;
         return;
       }
@@ -177,7 +207,7 @@ const calculate = () => {
     // 결과 출력
     resultElement.classList.remove("d-none", "alert-danger");
     resultElement.classList.add("alert-info");
-    resultElement.textContent = `결과: ${result}`;
+    resultElement.textContent = `결과: ${result.toLocaleString("ko-KR")}`;
 
     // 계산 기록 저장
     const record = { firstNumber, operator, secondNumber, result };
@@ -191,7 +221,8 @@ const calculate = () => {
     currentInput = result.toString();
     firstNumber = result; // 계산된 결과를 다음 계산의 첫 번째 숫자로 사용
     operator = null;
-    document.getElementById("display").textContent = result;
+    document.getElementById("display").textContent =
+      result.toLocaleString("ko-KR");
     isResultDisplayed = true;
   } catch (error) {
     showError(error.message);
@@ -215,8 +246,13 @@ const updateHistoryDisplay = () => {
   for (let i = 0; i < history.length; i++) {
     // for loop 사용 예시
     const record = history[i];
+    // 기록에는 포맷되지 않은 원본 숫자를 사용하여 정확한 계산식을 보여줍니다.
     const p = document.createElement("p");
-    p.textContent = `${record.firstNumber} ${record.operator} ${record.secondNumber} = ${record.result}`;
+    p.textContent = `${record.firstNumber.toLocaleString("ko-KR")} ${
+      record.operator
+    } ${record.secondNumber.toLocaleString(
+      "ko-KR"
+    )} = ${record.result.toLocaleString("ko-KR")}`;
     historyElement.appendChild(p);
   }
 };
@@ -236,8 +272,10 @@ const appendDecimal = () => {
       currentInput += ".";
       document.getElementById("display").textContent =
         firstNumber !== null && operator !== null
-          ? `${firstNumber} ${operator} ${currentInput}`
-          : currentInput;
+          ? `${formatNumberForDisplay(
+              firstNumber.toString()
+            )} ${operator} ${formatNumberForDisplay(currentInput)}`
+          : formatNumberForDisplay(currentInput);
     }
   } catch (error) {
     showError(error.message);
@@ -245,9 +283,6 @@ const appendDecimal = () => {
 };
 
 // 추가 기능: 백스페이스 (마지막 문자 삭제)
-// 이 기능은 이미지에 없으므로, 필요하다면 다시 추가할 수 있습니다.
-// 현재는 AC, +/-, % 버튼으로 대체됩니다.
-
 const backspace = () => {
   try {
     if (isResultDisplayed) {
@@ -262,13 +297,15 @@ const backspace = () => {
     if (currentInput === "") {
       document.getElementById("display").textContent =
         firstNumber !== null && operator !== null
-          ? `${firstNumber} ${operator} 0`
+          ? `${formatNumberForDisplay(firstNumber.toString())} ${operator} 0`
           : "0";
     } else {
       document.getElementById("display").textContent =
         firstNumber !== null && operator !== null
-          ? `${firstNumber} ${operator} ${currentInput}`
-          : currentInput;
+          ? `${formatNumberForDisplay(
+              firstNumber.toString()
+            )} ${operator} ${formatNumberForDisplay(currentInput)}`
+          : formatNumberForDisplay(currentInput);
     }
   } catch (error) {
     showError(error.message);
@@ -295,6 +332,6 @@ document.addEventListener("keydown", (event) => {
   } else if (key === ".") {
     appendDecimal();
   } else if (key === "Backspace") {
-    // backspace(); // 현재는 이 기능이 UI에 없으므로 주석 처리
+    backspace();
   }
 });
