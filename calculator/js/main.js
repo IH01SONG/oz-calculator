@@ -27,7 +27,7 @@ document.addEventListener("keydown", (event) => {
   const key = event.key;
   if (/[0-9]/.test(key)) {
     appendNumber(key);
-  } else if (["+", "-", "*", "/"].includes(key)) {
+  } else if (["+", "-", "*", "/", "^"].includes(key)) {
     setOperator(key);
   } else if (key === "Enter" || key === "=") {
     event.preventDefault(); // 폼 제출 방지
